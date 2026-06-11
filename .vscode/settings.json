@@ -1,0 +1,18 @@
+{
+    "window.zoomLevel": 0,
+    "editor.fontSize": 15,
+    "code-runner.ignoreSelection": true,
+    "code-runner.runInTerminal": true,
+    "python.testing.unittestEnabled": false,
+    "flake8.args": [
+        "--max-line-length=180",
+        "--ignore=W503, W504, E722, E126, E722, E712, E711",
+    ],
+    "[python]": {
+        "editor.formatOnSave": true
+    },
+    "python.testing.promptToConfigure": false,
+    "python.testing.pytestEnabled": false,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs":"active",
+}
