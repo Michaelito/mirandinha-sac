@@ -1,5 +1,3 @@
-from typing import Dict, List, Optional
-
 from openai import OpenAI
 from app.config import OPENAI_API_KEY
 
@@ -45,10 +43,7 @@ Regras de atendimento:
 """
 
 
-def responder_ia(
-    mensagem: str,
-    historico: Optional[List[Dict[str, str]]] = None,
-) -> str:
+def responder_ia(mensagem: str, historico: list[dict] | None = None) -> str:
     """
     Gera a resposta do atendente IA usando a mensagem atual e o histórico da conversa.
 

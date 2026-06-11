@@ -1,7 +1,5 @@
 # app/routes/whatsapp.py
 
-from typing import Dict, List
-
 from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
@@ -12,7 +10,7 @@ router = APIRouter(prefix="/whatsapp", tags=["WhatsApp"])
 
 # Memória simples em RAM para manter contexto da conversa.
 # Em produção, substitua por Redis, banco de dados ou tabela de mensagens.
-CONVERSAS: Dict[str, List[Dict[str, str]]] = {}
+CONVERSAS: dict[str, list[dict]] = {}
 
 
 class SendMessageRequest(BaseModel):
@@ -63,7 +61,6 @@ async def whatsapp_webhook(request: Request):
                 "success": False,
                 "ignored": True,
                 "reason": "Número não encontrado no payload.",
-                "payload": payload,
             }
 
         if not mensagem:

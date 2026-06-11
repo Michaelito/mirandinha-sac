@@ -1,9 +1,7 @@
 # app/services/whatsapp_service.py
 
-from typing import Any, Dict, Optional, Tuple
-
 import requests
-from app.config import UAZAPI_TOKEN, UAZAPI_URL
+from app.config import UAZAPI_URL, UAZAPI_TOKEN
 
 
 def enviar_whatsapp(numero: str, texto: str):
@@ -28,19 +26,14 @@ def enviar_whatsapp(numero: str, texto: str):
     return response
 
 
-def extrair_mensagem_webhook(
-    payload: Dict[str, Any],
-) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+def extrair_mensagem_webhook(payload: dict) -> tuple[str | None, str | None, str | None]:
     """
     Tenta extrair número, texto e tipo da mensagem recebida no webhook.
-    Compatível com Python 3.9.
+    Mantido flexível para diferentes formatos de payload do UAZAPI.
 
     Retorna: (numero, texto, tipo)
     """
     data = payload.get("data") or payload.get("message") or payload
-
-    if not isinstance(data, dict):
-        data = payload
 
     tipo = (
         data.get("type")
@@ -63,9 +56,11 @@ def extrair_mensagem_webhook(
     texto = (
         data.get("text")
         or data.get("body")
+        or data.get("message")
         or data.get("content")
         or payload.get("text")
         or payload.get("body")
+        or payload.get("message")
     )
 
     # Alguns webhooks chegam como {"text": {"body": "..."}}
@@ -73,21 +68,15 @@ def extrair_mensagem_webhook(
         texto = texto.get("body") or texto.get("text") or texto.get("message")
 
     # Alguns webhooks chegam como message.conversation ou message.extendedTextMessage.text
-    message_data = data.get("message")
-    if not texto and isinstance(message_data, dict):
+    if not texto and isinstance(data.get("message"), dict):
+        msg = data["message"]
         texto = (
-            message_data.get("conversation")
-            or (message_data.get("extendedTextMessage") or {}).get("text")
-            or (message_data.get("text") or {}).get("body")
+            msg.get("conversation")
+            or (msg.get("extendedTextMessage") or {}).get("text")
+            or (msg.get("text") or {}).get("body")
         )
 
     if numero:
         numero = str(numero).replace("@s.whatsapp.net", "").replace("@c.us", "")
-
-    if texto:
-        texto = str(texto).strip()
-
-    if tipo:
-        tipo = str(tipo)
 
     return numero, texto, tipo
