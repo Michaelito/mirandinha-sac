@@ -7,23 +7,21 @@ from app.config import UAZAPI_TOKEN, UAZAPI_URL
 
 
 def enviar_whatsapp(numero: str, texto: str):
-    """Envia mensagem de texto pelo UAZAPI."""
     response = requests.post(
         f"{UAZAPI_URL}/send/text",
         json={
             "number": numero,
-            "text": texto,
-            "linkPreview": False,
-            "readchat": True,
-            "delay": 0,
+            "text": texto
         },
         headers={
             "Accept": "application/json",
             "Content-Type": "application/json",
-            "token": UAZAPI_TOKEN,
+            "token": UAZAPI_TOKEN
         },
-        timeout=30,
+        timeout=30
     )
+
+    print("[UAZAPI]", response.status_code, response.text)
 
     return response
 
@@ -82,7 +80,8 @@ def extrair_mensagem_webhook(
         )
 
     if numero:
-        numero = str(numero).replace("@s.whatsapp.net", "").replace("@c.us", "")
+        numero = str(numero).replace(
+            "@s.whatsapp.net", "").replace("@c.us", "")
 
     if texto:
         texto = str(texto).strip()
